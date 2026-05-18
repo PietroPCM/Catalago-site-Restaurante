@@ -11,49 +11,64 @@ const catalogItems = [
   {
     name: "Burger da Casa",
     category: "Lanches",
-    description: "Pão brioche, blend bovino, queijo prato, molho da casa e salada fresca.",
+    description: "Pão brioche selado, blend bovino, queijo prato, molho da casa e salada fresca.",
     price: "R$ 28,90",
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=84",
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=86",
+    badge: "Mais pedido",
+    featured: true
+  },
+  {
+    name: "Smash Bacon Duplo",
+    category: "Lanches",
+    description: "Dois burgers prensados na chapa, queijo derretido, bacon crocante e molho da casa.",
+    price: "R$ 34,90",
+    image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=900&q=86",
+    badge: "Boa escolha",
     featured: true
   },
   {
     name: "X-Salada Clássico",
     category: "Lanches",
-    description: "Hambúrguer, queijo, alface, tomate, milho e maionese temperada.",
+    description: "Hambúrguer, queijo, alface, tomate, milho e maionese temperada no pão macio.",
     price: "R$ 22,90",
-    image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=84",
+    image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=900&q=86",
+    badge: "Clássico",
     featured: false
   },
   {
     name: "Combo Família",
     category: "Promoções",
-    description: "Dois burgers, uma porção média de fritas e dois refrigerantes lata.",
+    description: "Dois burgers artesanais, uma porção média de fritas e dois refrigerantes lata.",
     price: "R$ 69,90",
-    image: "https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=800&q=84",
+    image: "https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=900&q=86",
+    badge: "Combo da semana",
     featured: true
   },
   {
     name: "Porção de Fritas",
     category: "Porções",
-    description: "Batatas crocantes servidas com molho especial da casa.",
+    description: "Batatas crocantes servidas sequinhas com molho especial da casa.",
     price: "R$ 24,90",
-    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=84",
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=86",
+    badge: "Crocante",
     featured: false
   },
   {
     name: "Frango Crocante",
     category: "Porções",
-    description: "Iscas de frango empanadas, sequinhas e acompanhadas de molho suave.",
+    description: "Iscas de frango empanadas, douradas na medida e acompanhadas de molho suave.",
     price: "R$ 32,90",
-    image: "https://images.unsplash.com/photo-1562967916-eb82221dfb36?auto=format&fit=crop&w=800&q=84",
+    image: "https://images.unsplash.com/photo-1562967916-eb82221dfb36?auto=format&fit=crop&w=900&q=86",
+    badge: "Para dividir",
     featured: false
   },
   {
     name: "Refrigerante Lata",
     category: "Bebidas",
-    description: "Opções geladas para acompanhar seu lanche ou porção.",
+    description: "Opções geladas para acompanhar burger, porção ou combo.",
     price: "R$ 6,50",
-    image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=800&q=84",
+    image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=900&q=86",
+    badge: "Gelado",
     featured: false
   },
   {
@@ -61,7 +76,8 @@ const catalogItems = [
     category: "Bebidas",
     description: "Sabores do dia preparados na hora, conforme disponibilidade.",
     price: "R$ 9,90",
-    image: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=800&q=84",
+    image: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=900&q=86",
+    badge: "Natural",
     featured: false
   },
   {
@@ -69,7 +85,8 @@ const catalogItems = [
     category: "Sobremesas",
     description: "Brownie macio com casquinha crocante, servido em embalagem individual.",
     price: "R$ 12,90",
-    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=84",
+    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=86",
+    badge: "Doce final",
     featured: true
   }
 ];
@@ -77,9 +94,11 @@ const catalogItems = [
 const elements = {
   header: document.querySelector(".site-header"),
   catalogGrid: document.querySelector("#catalogGrid"),
+  favoriteGrid: document.querySelector("#favoriteGrid"),
   categoryTabs: document.querySelector("#categoryTabs"),
   searchInput: document.querySelector("#searchInput"),
   emptyState: document.querySelector("#emptyState"),
+  clearFilters: document.querySelector("#clearFilters"),
   menuToggle: document.querySelector(".menu-toggle"),
   navLinks: document.querySelector("#navLinks"),
   whatsappLinks: document.querySelectorAll("[data-whatsapp-general]"),
@@ -113,11 +132,11 @@ function getFeaturedItem() {
 }
 
 function getItemWhatsAppMessage(item) {
-  return `Olá, vim pelo site da ${business.name} e quero pedir ${item.name}. Pode confirmar disponibilidade e forma de pagamento?`;
+  return `Olá, vim pelo site da ${business.name} e quero pedir ${item.name}. Pode confirmar disponibilidade, horário e forma de pagamento?`;
 }
 
 function matchesSearch(item, searchTerm) {
-  const haystack = normalizeText(`${item.name} ${item.category} ${item.description}`);
+  const haystack = normalizeText(`${item.name} ${item.category} ${item.description} ${item.badge}`);
   return haystack.includes(normalizeText(searchTerm));
 }
 
@@ -143,29 +162,41 @@ function renderCategories() {
     .join("");
 }
 
+function productCard(item, index = 0, compact = false) {
+  return `
+    <article class="product-card tilt-card ${item.featured ? "is-featured" : ""} ${compact ? "is-compact" : ""}" data-tilt style="animation-delay: ${index * 55}ms">
+      <div class="product-image">
+        <img src="${item.image}" alt="${item.name}" loading="lazy">
+        <span class="badge">${item.badge}</span>
+      </div>
+      <div class="product-content">
+        <div class="product-meta">
+          <span class="product-category">${item.category}</span>
+          <strong class="product-price">${item.price}</strong>
+        </div>
+        <h3>${item.name}</h3>
+        <p>${item.description}</p>
+        <a class="btn btn-primary magnetic" href="${createWhatsAppLink(getItemWhatsAppMessage(item))}" target="_blank" rel="noopener">
+          Pedir esse item
+        </a>
+      </div>
+    </article>
+  `;
+}
+
+function renderFavorites() {
+  if (!elements.favoriteGrid) return;
+  const favorites = catalogItems.filter((item) => item.featured).slice(0, 4);
+  elements.favoriteGrid.innerHTML = favorites.map((item, index) => productCard(item, index, true)).join("");
+  setupTilt(elements.favoriteGrid.querySelectorAll("[data-tilt]"));
+  setupMagnetic(elements.favoriteGrid.querySelectorAll(".magnetic"));
+}
+
 function renderCatalog() {
   const filteredItems = getFilteredItems();
 
   elements.catalogGrid.innerHTML = filteredItems
-    .map((item, index) => `
-      <article class="product-card tilt-card ${item.featured ? "is-featured" : ""}" data-tilt style="animation-delay: ${index * 55}ms">
-        <div class="product-image">
-          <img src="${item.image}" alt="${item.name}" loading="lazy">
-          ${item.featured ? '<span class="badge">Destaque</span>' : ""}
-        </div>
-        <div class="product-content">
-          <div class="product-meta">
-            <span class="product-category">${item.category}</span>
-            <strong class="product-price">${item.price}</strong>
-          </div>
-          <h3>${item.name}</h3>
-          <p>${item.description}</p>
-          <a class="btn btn-primary magnetic" href="${createWhatsAppLink(getItemWhatsAppMessage(item))}" target="_blank" rel="noopener">
-            Pedir pelo WhatsApp
-          </a>
-        </div>
-      </article>
-    `)
+    .map((item, index) => productCard(item, index))
     .join("");
 
   elements.emptyState.hidden = filteredItems.length > 0;
@@ -234,7 +265,7 @@ function setupCatalogEvents() {
     updateCatalog();
 
     if (window.gsap && !prefersReducedMotion) {
-      gsap.fromTo(".product-card", { y: 24, opacity: 0, scale: 0.98 }, {
+      gsap.fromTo(".catalog-grid .product-card", { y: 24, opacity: 0, scale: 0.98 }, {
         y: 0,
         opacity: 1,
         scale: 1,
@@ -246,6 +277,12 @@ function setupCatalogEvents() {
   });
 
   elements.searchInput.addEventListener("input", renderCatalog);
+
+  elements.clearFilters.addEventListener("click", () => {
+    activeCategory = "Todos";
+    elements.searchInput.value = "";
+    updateCatalog();
+  });
 }
 
 function updateScrollEffects() {
@@ -334,7 +371,6 @@ function setupGsapAnimations() {
       }
     });
   });
-
 }
 
 function setupTilt(targets = document.querySelectorAll("[data-tilt]")) {
@@ -348,8 +384,8 @@ function setupTilt(targets = document.querySelectorAll("[data-tilt]")) {
       const rect = card.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      const rotateY = ((x / rect.width) - 0.5) * 10;
-      const rotateX = ((0.5 - y / rect.height)) * 10;
+      const rotateY = ((x / rect.width) - 0.5) * 8;
+      const rotateX = ((0.5 - y / rect.height)) * 8;
       card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
     });
 
@@ -386,6 +422,7 @@ function init() {
   setupCatalogEvents();
   setupScrollState();
   updateCatalog();
+  renderFavorites();
   setupGsapAnimations();
   setupTilt();
   setupMagnetic();
